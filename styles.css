@@ -70,6 +70,24 @@ h1 {
   font-size: 15px;
 }
 
+.source-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  margin-top: 16px;
+  padding: 7px 12px;
+  color: #ffffff;
+  background: var(--blue);
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.source-link:hover {
+  background: #254d76;
+}
+
 .metrics {
   display: grid;
   grid-template-columns: repeat(3, minmax(92px, 1fr));
