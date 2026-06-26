@@ -120,11 +120,11 @@ function createCard(record) {
     <div class="fields">
       <div class="meta-row">
         <div class="field">
-          <span class="field-label">ステータス</span>
+          <span class="field-label">ステータス：</span>
           <p class="field-value status-value"></p>
         </div>
         <div class="field">
-          <span class="field-label">担当者</span>
+          <span class="field-label">担当者：</span>
           <p class="field-value owner"></p>
         </div>
       </div>

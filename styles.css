@@ -247,8 +247,8 @@ h1 {
 }
 
 .meta-row .field {
-  grid-template-columns: 88px minmax(0, 1fr);
-  gap: 8px;
+  grid-template-columns: 86px minmax(0, 1fr);
+  gap: 0;
   align-items: baseline;
 }
 
@@ -352,7 +352,7 @@ h1 {
   }
 
   .meta-row .field {
-    grid-template-columns: 88px minmax(0, 1fr);
+    grid-template-columns: 86px minmax(0, 1fr);
   }
 
   .card-foot {
