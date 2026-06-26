@@ -115,7 +115,7 @@ function createCard(record) {
       <div class="product-row">
         <h2 class="product-name"></h2>
       </div>
-      <p class="item-name"></p>
+      <p class="item-name"><span class="field-label task-label">タスク：</span><span class="task-value"></span></p>
     </div>
     <div class="fields">
       <div class="meta-row">
@@ -148,7 +148,7 @@ function createCard(record) {
 
   card.querySelector(".product-name").textContent = record.productName;
   card.querySelector(".status-value").textContent = record.status;
-  card.querySelector(".item-name").textContent = record.itemName;
+  card.querySelector(".task-value").textContent = record.itemName;
   card.querySelector(".owner").textContent = record.owner;
   card.querySelector(".notes").textContent = notes;
   card.querySelector(".due-date").textContent = record.dueDate || "未設定";

@@ -235,6 +235,11 @@ h1 {
   line-height: 1.45;
 }
 
+.task-label {
+  margin-right: 2px;
+  vertical-align: baseline;
+}
+
 .fields {
   display: grid;
   gap: 12px;
