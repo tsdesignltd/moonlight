@@ -258,6 +258,7 @@ h1 {
 }
 
 .field-label {
+  color: var(--blue);
   font-size: 12px;
   font-weight: 800;
 }
