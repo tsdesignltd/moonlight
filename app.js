@@ -119,14 +119,14 @@ function createCard(record) {
     </div>
     <div class="fields">
       <div class="meta-row">
-        <span class="meta-pill status-badge" data-status="${escapeHtml(record.status)}">
-          <span class="meta-label">ステータス</span>
-          <span class="meta-value status-value"></span>
-        </span>
-        <span class="meta-pill owner-badge">
-          <span class="meta-label">担当者</span>
-          <span class="meta-value owner"></span>
-        </span>
+        <div class="field">
+          <span class="field-label">ステータス</span>
+          <p class="field-value status-value"></p>
+        </div>
+        <div class="field">
+          <span class="field-label">担当者</span>
+          <p class="field-value owner"></p>
+        </div>
       </div>
       <div class="field">
         <span class="field-label">実施状況・課題・対応方針</span>
@@ -139,7 +139,10 @@ function createCard(record) {
     </div>
     <div class="card-foot">
       <div class="sheet-name"></div>
-      <a class="sheet-link" target="_blank" rel="noopener noreferrer">元シートを開く</a>
+      <div class="field source-field">
+        <span class="field-label">元シート</span>
+        <a class="sheet-link" target="_blank" rel="noopener noreferrer">開く</a>
+      </div>
     </div>
   `;
 
