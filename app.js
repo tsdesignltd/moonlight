@@ -1,6 +1,7 @@
 const sourceUrl =
   "https://docs.google.com/spreadsheets/d/1ghLnmliuFz-3z8QPrWs8aKnbukPHnHQhiDMKZkZpEK0/edit?gid=1627009869#gid=1627009869";
 const spreadsheetId = "1ghLnmliuFz-3z8QPrWs8aKnbukPHnHQhiDMKZkZpEK0";
+const cacheKey = "moonlight-progress-records-v1";
 
 const knownSheetConfigs = [
   {
@@ -77,6 +78,14 @@ const state = {
 };
 
 async function loadRecords() {
+  const cachedRecords = loadCachedRecords();
+  if (cachedRecords.length) {
+    state.records = cachedRecords;
+    render();
+    refreshStatus.textContent = "前回同期した内容を表示しています";
+    return;
+  }
+
   if (location.protocol === "http:" || location.protocol === "https:") {
     const response = await fetch("./data/progress.json");
     if (response.ok) {
@@ -90,6 +99,24 @@ async function loadRecords() {
   render();
 }
 
+function loadCachedRecords() {
+  try {
+    const raw = localStorage.getItem(cacheKey);
+    return raw ? JSON.parse(raw) : [];
+  } catch (error) {
+    console.warn(error);
+    return [];
+  }
+}
+
+function saveCachedRecords(records) {
+  try {
+    localStorage.setItem(cacheKey, JSON.stringify(records));
+  } catch (error) {
+    console.warn(error);
+  }
+}
+
 async function refreshFromGoogleDoc() {
   refreshButton.disabled = true;
   refreshStatus.textContent = "更新中...";
@@ -97,6 +124,7 @@ async function refreshFromGoogleDoc() {
   try {
     const nextRecords = await fetchWorkbookRecords();
     state.records = nextRecords.filter(Boolean);
+    saveCachedRecords(state.records);
     render();
     refreshStatus.textContent = `${formatDateTime(new Date())} に更新しました`;
   } catch (error) {
