@@ -11,6 +11,7 @@ const embeddedRecords = [
     owner: "角南",
     notes: "",
     dueDate: "",
+    updatedDate: "2026/06/26",
     sheetUrl:
       "https://docs.google.com/spreadsheets/d/1ghLnmliuFz-3z8QPrWs8aKnbukPHnHQhiDMKZkZpEK0/edit#gid=1627009869",
   },
@@ -23,6 +24,7 @@ const embeddedRecords = [
     owner: "小峯",
     notes: "ウッドストーブとしての性能のフィールドチェック",
     dueDate: "",
+    updatedDate: "2026/06/26",
     sheetUrl:
       "https://docs.google.com/spreadsheets/d/1ghLnmliuFz-3z8QPrWs8aKnbukPHnHQhiDMKZkZpEK0/edit#gid=291645431",
   },
@@ -35,6 +37,7 @@ const embeddedRecords = [
     owner: "小峯",
     notes: "雪上でのテスト。まずは軽く安全な範囲で。",
     dueDate: "",
+    updatedDate: "2026/06/26",
     sheetUrl:
       "https://docs.google.com/spreadsheets/d/1ghLnmliuFz-3z8QPrWs8aKnbukPHnHQhiDMKZkZpEK0/edit#gid=759713071",
   },
@@ -112,6 +115,7 @@ function createCard(record) {
   const notes = record.notes || "記載なし";
   card.innerHTML = `
     <div class="card-head">
+      <div class="updated-date"></div>
       <div class="product-row">
         <h2 class="product-name"></h2>
       </div>
@@ -146,6 +150,7 @@ function createCard(record) {
     </div>
   `;
 
+  card.querySelector(".updated-date").textContent = `更新日：${record.updatedDate || "未確認"}`;
   card.querySelector(".product-name").textContent = record.productName;
   card.querySelector(".status-value").textContent = record.status;
   card.querySelector(".task-value").textContent = record.itemName;
