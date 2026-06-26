@@ -78,6 +78,11 @@ const state = {
 };
 
 async function loadRecords() {
+  if (new URLSearchParams(location.search).get("clearCache") === "1") {
+    clearCachedRecords();
+    refreshStatus.textContent = "保存済みの同期内容を削除しました";
+  }
+
   const cachedRecords = loadCachedRecords();
   if (cachedRecords.length) {
     state.records = cachedRecords;
@@ -97,6 +102,14 @@ async function loadRecords() {
 
   state.records = embeddedRecords;
   render();
+}
+
+function clearCachedRecords() {
+  try {
+    localStorage.removeItem(cacheKey);
+  } catch (error) {
+    console.warn(error);
+  }
 }
 
 function loadCachedRecords() {
