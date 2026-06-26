@@ -2,7 +2,7 @@ const sourceUrl =
   "https://docs.google.com/spreadsheets/d/1ghLnmliuFz-3z8QPrWs8aKnbukPHnHQhiDMKZkZpEK0/edit?gid=1627009869#gid=1627009869";
 const spreadsheetId = "1ghLnmliuFz-3z8QPrWs8aKnbukPHnHQhiDMKZkZpEK0";
 
-const sheetConfigs = [
+const knownSheetConfigs = [
   {
     sheetName: "開発管理26001_羽釜本体",
     gid: "1627009869",
@@ -95,7 +95,7 @@ async function refreshFromGoogleDoc() {
   refreshStatus.textContent = "更新中...";
 
   try {
-    const nextRecords = await Promise.all(sheetConfigs.map(fetchSheetRecord));
+    const nextRecords = await fetchWorkbookRecords();
     state.records = nextRecords.filter(Boolean);
     render();
     refreshStatus.textContent = `${formatDateTime(new Date())} に更新しました`;
@@ -105,6 +105,42 @@ async function refreshFromGoogleDoc() {
   } finally {
     refreshButton.disabled = false;
   }
+}
+
+async function fetchWorkbookRecords() {
+  if (!window.XLSX) {
+    return fetchKnownSheetRecords();
+  }
+
+  try {
+    const exportUrl = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/export?format=xlsx&_=${Date.now()}`;
+    const response = await fetch(exportUrl);
+    if (!response.ok) throw new Error("Workbook export failed");
+
+    const workbook = window.XLSX.read(await response.arrayBuffer(), {
+      type: "array",
+      cellDates: true,
+    });
+    const knownByName = new Map(knownSheetConfigs.map((config) => [config.sheetName, config]));
+
+    return workbook.SheetNames.filter((sheetName) => sheetName.startsWith("開発管理")).map((sheetName) => {
+      const worksheet = workbook.Sheets[sheetName];
+      const rows = window.XLSX.utils.sheet_to_json(worksheet, {
+        header: 1,
+        defval: "",
+        raw: false,
+      });
+      const config = knownByName.get(sheetName) || { sheetName, gid: "" };
+      return extractNextTask(rows, config);
+    });
+  } catch (error) {
+    console.warn(error);
+    return fetchKnownSheetRecords();
+  }
+}
+
+function fetchKnownSheetRecords() {
+  return Promise.all(knownSheetConfigs.map(fetchSheetRecord));
 }
 
 async function fetchSheetRecord(config) {
@@ -154,7 +190,7 @@ function tableToRows(table) {
 }
 
 function extractNextTask(rows, config) {
-  const productName = rows[0]?.[2] || config.sheetName.split("_").at(-1);
+  const productName = findProductName(rows) || config.sheetName.split("_").at(-1);
   const headerIndex = rows.findIndex((row) => row.includes("ステータス") && row.includes("項目"));
   if (headerIndex === -1) return null;
 
@@ -185,6 +221,16 @@ function extractNextTask(rows, config) {
   return null;
 }
 
+function findProductName(rows) {
+  for (const row of rows.slice(0, 12)) {
+    const labelIndex = row.indexOf("プロダクト名");
+    if (labelIndex === -1) continue;
+    const value = row.slice(labelIndex + 1).find((cell) => String(cell || "").trim());
+    return String(value || "").trim();
+  }
+  return rows[0]?.[2] || "";
+}
+
 function buildRecord(row, cols, config, productName) {
   const owners = [row[cols.mlg], row[cols.tsd]]
     .map((value) => String(value || "").trim())
@@ -199,7 +245,9 @@ function buildRecord(row, cols, config, productName) {
     notes: row[cols.notes]?.trim() || "",
     dueDate: row[cols.dueDate]?.trim() || "",
     updatedDate: formatDate(new Date()),
-    sheetUrl: `https://docs.google.com/spreadsheets/d/${spreadsheetId}/edit#gid=${config.gid}`,
+    sheetUrl: config.gid
+      ? `https://docs.google.com/spreadsheets/d/${spreadsheetId}/edit#gid=${config.gid}`
+      : sourceUrl,
   };
 }
 
