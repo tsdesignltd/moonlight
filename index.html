@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>商品開発 進捗カード</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="summary-band" aria-labelledby="page-title">
+        <div class="summary-copy">
+          <p class="eyebrow">Google Sheets / 開発管理260xx</p>
+          <h1 id="page-title">商品開発 進捗カード</h1>
+          <p class="lead">完了ステータスの次にある項目を、案件ごとに一覧化しています。</p>
+        </div>
+
+        <div class="metrics" aria-label="集計">
+          <div class="metric">
+            <span class="metric-value" id="totalCount">0</span>
+            <span class="metric-label">案件</span>
+          </div>
+          <div class="metric">
+            <span class="metric-value" id="activeCount">0</span>
+            <span class="metric-label">実施中</span>
+          </div>
+          <div class="metric">
+            <span class="metric-value" id="pendingCount">0</span>
+            <span class="metric-label">未実施</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="toolbar" aria-label="表示条件">
+        <label class="search-box">
+          <span>検索</span>
+          <input id="searchInput" type="search" placeholder="プロダクト名・項目名・担当者" />
+        </label>
+
+        <fieldset class="status-filter">
+          <legend>ステータス</legend>
+          <label>
+            <input type="radio" name="status" value="all" checked />
+            <span>すべて</span>
+          </label>
+          <label>
+            <input type="radio" name="status" value="実施中" />
+            <span>実施中</span>
+          </label>
+          <label>
+            <input type="radio" name="status" value="未実施" />
+            <span>未実施</span>
+          </label>
+        </fieldset>
+      </section>
+
+      <section class="cards-grid" id="cardsGrid" aria-label="進捗カード"></section>
+    </main>
+
+    <script src="./app.js" defer></script>
+  </body>
+</html>

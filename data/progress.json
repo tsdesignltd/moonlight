@@ -1,0 +1,29 @@
+[
+  {
+    "sheetName": "開発管理26001_羽釜本体",
+    "productName": "軽量羽釜",
+    "number": "17",
+    "itemName": "T2試作製作",
+    "status": "実施中",
+    "owner": "角南",
+    "notes": ""
+  },
+  {
+    "sheetName": "開発管理26002_羽釜ストーブ",
+    "productName": "羽釜ストーブ",
+    "number": "11",
+    "itemName": "T1試作検討",
+    "status": "未実施",
+    "owner": "小峯",
+    "notes": "ウッドストーブとしての性能のフィールドチェック"
+  },
+  {
+    "sheetName": "開発管理26003_スキーシュー",
+    "productName": "スキーシュー",
+    "number": "11",
+    "itemName": "T1試作検討",
+    "status": "未実施",
+    "owner": "小峯",
+    "notes": "雪上でのテスト。まずは軽く安全な範囲で。"
+  }
+]
