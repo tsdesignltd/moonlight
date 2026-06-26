@@ -16,6 +16,14 @@ const knownSheetConfigs = [
     sheetName: "開発管理26003_スキーシュー",
     gid: "759713071",
   },
+  {
+    sheetName: "開発管理26004_折畳箸",
+    gid: "1293373879",
+  },
+  {
+    sheetName: "開発管理26005_フック自在",
+    gid: "1114953107",
+  },
 ];
 
 const embeddedRecords = [
@@ -78,12 +86,13 @@ const state = {
 };
 
 async function loadRecords() {
-  if (new URLSearchParams(location.search).get("clearCache") === "1") {
+  const shouldClearCache = new URLSearchParams(location.search).get("clearCache") === "1";
+  if (shouldClearCache) {
     clearCachedRecords();
     refreshStatus.textContent = "保存済みの同期内容を削除しました";
   }
 
-  const cachedRecords = loadCachedRecords();
+  const cachedRecords = shouldClearCache ? [] : loadCachedRecords();
   if (cachedRecords.length) {
     state.records = cachedRecords;
     render();
