@@ -10,6 +10,7 @@ const embeddedRecords = [
     status: "実施中",
     owner: "角南",
     notes: "",
+    dueDate: "",
   },
   {
     sheetName: "開発管理26002_羽釜ストーブ",
@@ -19,6 +20,7 @@ const embeddedRecords = [
     status: "未実施",
     owner: "小峯",
     notes: "ウッドストーブとしての性能のフィールドチェック",
+    dueDate: "",
   },
   {
     sheetName: "開発管理26003_スキーシュー",
@@ -28,6 +30,7 @@ const embeddedRecords = [
     status: "未実施",
     owner: "小峯",
     notes: "雪上でのテスト。まずは軽く安全な範囲で。",
+    dueDate: "",
   },
 ];
 
@@ -105,29 +108,38 @@ function createCard(record) {
     <div class="card-head">
       <div class="product-row">
         <h2 class="product-name"></h2>
-        <span class="status-badge" data-status="${escapeHtml(record.status)}"></span>
       </div>
-      <p class="item-name"><span class="item-number"></span><span class="item-text"></span></p>
+      <p class="item-name"></p>
     </div>
     <div class="fields">
-      <div class="field">
-        <span class="field-label">担当者</span>
-        <p class="field-value owner"></p>
+      <div class="meta-row">
+        <span class="meta-pill status-badge" data-status="${escapeHtml(record.status)}">
+          <span class="meta-label">ステータス</span>
+          <span class="meta-value status-value"></span>
+        </span>
+        <span class="meta-pill owner-badge">
+          <span class="meta-label">担当者</span>
+          <span class="meta-value owner"></span>
+        </span>
       </div>
       <div class="field">
         <span class="field-label">実施状況・課題・対応方針</span>
         <p class="field-value notes"></p>
+      </div>
+      <div class="field due-field">
+        <span class="field-label">納期</span>
+        <p class="field-value due-date"></p>
       </div>
     </div>
     <div class="sheet-name"></div>
   `;
 
   card.querySelector(".product-name").textContent = record.productName;
-  card.querySelector(".status-badge").textContent = record.status;
-  card.querySelector(".item-number").textContent = record.number ? `${record.number}. ` : "";
-  card.querySelector(".item-text").textContent = record.itemName;
+  card.querySelector(".status-value").textContent = record.status;
+  card.querySelector(".item-name").textContent = record.itemName;
   card.querySelector(".owner").textContent = record.owner;
   card.querySelector(".notes").textContent = notes;
+  card.querySelector(".due-date").textContent = record.dueDate || "未設定";
   card.querySelector(".sheet-name").textContent = record.sheetName;
   card.title = sourceUrl;
 

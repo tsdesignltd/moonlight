@@ -175,7 +175,7 @@ h1 {
   position: relative;
   display: grid;
   gap: 16px;
-  min-height: 330px;
+  min-height: 350px;
   padding: 20px;
   background: var(--paper);
   border: 1px solid var(--line);
@@ -210,14 +210,52 @@ h1 {
   line-height: 1.25;
 }
 
-.status-badge {
-  flex: 0 0 auto;
-  padding: 5px 9px;
-  color: #ffffff;
-  background: var(--blue);
-  border-radius: 6px;
-  font-size: 12px;
+.item-name {
+  margin: 0;
+  font-size: 17px;
   font-weight: 800;
+  line-height: 1.45;
+}
+
+.fields {
+  display: grid;
+  gap: 12px;
+}
+
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.meta-pill {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  min-height: 34px;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: #f8fafc;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.meta-pill .meta-label {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.status-badge {
+  color: #ffffff;
+  border-color: transparent;
+  background: var(--blue);
+}
+
+.status-badge .meta-label {
+  color: rgba(255, 255, 255, 0.82);
 }
 
 .status-badge[data-status="実施中"] {
@@ -228,21 +266,9 @@ h1 {
   background: var(--amber);
 }
 
-.item-name {
-  margin: 0;
-  font-size: 17px;
-  font-weight: 800;
-  line-height: 1.45;
-}
-
-.item-number {
-  color: var(--muted);
-  font-weight: 700;
-}
-
-.fields {
-  display: grid;
-  gap: 12px;
+.owner-badge {
+  border-color: rgba(49, 95, 143, 0.22);
+  background: rgba(49, 95, 143, 0.08);
 }
 
 .field {
@@ -260,10 +286,13 @@ h1 {
   line-height: 1.65;
 }
 
+.due-field {
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+
 .sheet-name {
   align-self: end;
-  padding-top: 12px;
-  border-top: 1px solid var(--line);
   font-size: 12px;
   overflow-wrap: anywhere;
 }
