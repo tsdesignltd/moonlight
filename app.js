@@ -1,5 +1,21 @@
 const sourceUrl =
   "https://docs.google.com/spreadsheets/d/1ghLnmliuFz-3z8QPrWs8aKnbukPHnHQhiDMKZkZpEK0/edit?gid=1627009869#gid=1627009869";
+const spreadsheetId = "1ghLnmliuFz-3z8QPrWs8aKnbukPHnHQhiDMKZkZpEK0";
+
+const sheetConfigs = [
+  {
+    sheetName: "開発管理26001_羽釜本体",
+    gid: "1627009869",
+  },
+  {
+    sheetName: "開発管理26002_羽釜ストーブ",
+    gid: "291645431",
+  },
+  {
+    sheetName: "開発管理26003_スキーシュー",
+    gid: "759713071",
+  },
+];
 
 const embeddedRecords = [
   {
@@ -45,6 +61,8 @@ const embeddedRecords = [
 
 const cardsGrid = document.querySelector("#cardsGrid");
 const searchInput = document.querySelector("#searchInput");
+const refreshButton = document.querySelector("#refreshButton");
+const refreshStatus = document.querySelector("#refreshStatus");
 const statusInputs = [...document.querySelectorAll('input[name="status"]')];
 const totalCount = document.querySelector("#totalCount");
 const activeCount = document.querySelector("#activeCount");
@@ -70,6 +88,136 @@ async function loadRecords() {
 
   state.records = embeddedRecords;
   render();
+}
+
+async function refreshFromGoogleDoc() {
+  refreshButton.disabled = true;
+  refreshStatus.textContent = "更新中...";
+
+  try {
+    const nextRecords = await Promise.all(sheetConfigs.map(fetchSheetRecord));
+    state.records = nextRecords.filter(Boolean);
+    render();
+    refreshStatus.textContent = `${formatDateTime(new Date())} に更新しました`;
+  } catch (error) {
+    refreshStatus.textContent = "更新できませんでした。Google Docの共有設定を確認してください。";
+    console.error(error);
+  } finally {
+    refreshButton.disabled = false;
+  }
+}
+
+async function fetchSheetRecord(config) {
+  const table = await loadGvizTable(config);
+  const rows = tableToRows(table);
+  return extractNextTask(rows, config);
+}
+
+function loadGvizTable(config) {
+  return new Promise((resolve, reject) => {
+    const callbackName = `moonlightRefresh${config.gid}${Date.now()}`;
+    const script = document.createElement("script");
+    const timeout = window.setTimeout(() => {
+      cleanup();
+      reject(new Error(`${config.sheetName} timed out`));
+    }, 15000);
+
+    function cleanup() {
+      window.clearTimeout(timeout);
+      script.remove();
+      delete window[callbackName];
+    }
+
+    window[callbackName] = (payload) => {
+      cleanup();
+      if (payload.status !== "ok") {
+        reject(new Error(`${config.sheetName} returned ${payload.status}`));
+        return;
+      }
+      resolve(payload.table);
+    };
+
+    script.onerror = () => {
+      cleanup();
+      reject(new Error(`${config.sheetName} script could not be loaded`));
+    };
+
+    script.src = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:json;responseHandler:${callbackName}&gid=${config.gid}&_=${Date.now()}`;
+    document.head.append(script);
+  });
+}
+
+function tableToRows(table) {
+  const labels = table.cols.map((col) => col.label || "");
+  const rows = table.rows.map((row) => (row.c || []).map((cell) => String(cell?.f ?? cell?.v ?? "")));
+  return [labels, ...rows];
+}
+
+function extractNextTask(rows, config) {
+  const productName = rows[0]?.[2] || config.sheetName.split("_").at(-1);
+  const headerIndex = rows.findIndex((row) => row.includes("ステータス") && row.includes("項目"));
+  if (headerIndex === -1) return null;
+
+  const headers = rows[headerIndex];
+  const indexOf = (label) => headers.indexOf(label);
+  const cols = {
+    item: indexOf("項目"),
+    mlg: indexOf("MLG"),
+    tsd: indexOf("TSD"),
+    dueDate: indexOf("納期"),
+    status: indexOf("ステータス"),
+    notes: indexOf("実施状況・課題・対応方針"),
+  };
+
+  let prevComplete = false;
+  for (const row of rows.slice(headerIndex + 1)) {
+    const itemName = row[cols.item]?.trim() || "";
+    const status = row[cols.status]?.trim() || "";
+    if (!itemName && !status) continue;
+
+    if (prevComplete && status !== "完了") {
+      return buildRecord(row, cols, config, productName);
+    }
+
+    prevComplete = status === "完了";
+  }
+
+  return null;
+}
+
+function buildRecord(row, cols, config, productName) {
+  const owners = [row[cols.mlg], row[cols.tsd]]
+    .map((value) => String(value || "").trim())
+    .filter(Boolean);
+
+  return {
+    sheetName: config.sheetName,
+    productName,
+    itemName: row[cols.item]?.trim() || "",
+    status: row[cols.status]?.trim() || "未入力",
+    owner: owners.length ? [...new Set(owners)].join(" / ") : "未設定",
+    notes: row[cols.notes]?.trim() || "",
+    dueDate: row[cols.dueDate]?.trim() || "",
+    updatedDate: formatDate(new Date()),
+    sheetUrl: `https://docs.google.com/spreadsheets/d/${spreadsheetId}/edit#gid=${config.gid}`,
+  };
+}
+
+function formatDate(date) {
+  return new Intl.DateTimeFormat("ja-JP", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(date);
+}
+
+function formatDateTime(date) {
+  return new Intl.DateTimeFormat("ja-JP", {
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(date);
 }
 
 function render() {
@@ -183,6 +331,8 @@ for (const input of statusInputs) {
     render();
   });
 }
+
+refreshButton.addEventListener("click", refreshFromGoogleDoc);
 
 loadRecords().catch((error) => {
   cardsGrid.innerHTML = `<div class="empty-state">${escapeHtml(error.message)}</div>`;

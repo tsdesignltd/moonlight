@@ -70,7 +70,8 @@ h1 {
   font-size: 15px;
 }
 
-.source-link {
+.source-link,
+.refresh-button {
   display: inline-flex;
   align-items: center;
   min-height: 36px;
@@ -78,14 +79,35 @@ h1 {
   padding: 7px 12px;
   color: #ffffff;
   background: var(--blue);
+  border: 0;
   border-radius: 7px;
   font-size: 13px;
   font-weight: 800;
   text-decoration: none;
+  cursor: pointer;
 }
 
-.source-link:hover {
+.refresh-button {
+  margin-left: 8px;
+  background: var(--green);
+}
+
+.source-link:hover,
+.refresh-button:hover {
   background: #254d76;
+}
+
+.refresh-button:disabled {
+  cursor: wait;
+  opacity: 0.62;
+}
+
+.refresh-status {
+  min-height: 18px;
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
 }
 
 .metrics {
