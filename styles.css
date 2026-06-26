@@ -309,10 +309,39 @@ h1 {
   border-top: 1px solid var(--line);
 }
 
-.sheet-name {
+.card-foot {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
   align-self: end;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.sheet-name {
   font-size: 12px;
   overflow-wrap: anywhere;
+}
+
+.sheet-link {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  padding: 6px 10px;
+  color: var(--blue);
+  background: #ffffff;
+  border: 1px solid rgba(49, 95, 143, 0.34);
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.sheet-link:hover {
+  background: rgba(49, 95, 143, 0.08);
 }
 
 .empty-state {
@@ -365,5 +394,10 @@ h1 {
 
   .status-badge {
     justify-self: start;
+  }
+
+  .card-foot {
+    display: grid;
+    justify-items: start;
   }
 }

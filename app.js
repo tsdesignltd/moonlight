@@ -11,6 +11,8 @@ const embeddedRecords = [
     owner: "角南",
     notes: "",
     dueDate: "",
+    sheetUrl:
+      "https://docs.google.com/spreadsheets/d/1ghLnmliuFz-3z8QPrWs8aKnbukPHnHQhiDMKZkZpEK0/edit#gid=1627009869",
   },
   {
     sheetName: "開発管理26002_羽釜ストーブ",
@@ -21,6 +23,8 @@ const embeddedRecords = [
     owner: "小峯",
     notes: "ウッドストーブとしての性能のフィールドチェック",
     dueDate: "",
+    sheetUrl:
+      "https://docs.google.com/spreadsheets/d/1ghLnmliuFz-3z8QPrWs8aKnbukPHnHQhiDMKZkZpEK0/edit#gid=291645431",
   },
   {
     sheetName: "開発管理26003_スキーシュー",
@@ -31,6 +35,8 @@ const embeddedRecords = [
     owner: "小峯",
     notes: "雪上でのテスト。まずは軽く安全な範囲で。",
     dueDate: "",
+    sheetUrl:
+      "https://docs.google.com/spreadsheets/d/1ghLnmliuFz-3z8QPrWs8aKnbukPHnHQhiDMKZkZpEK0/edit#gid=759713071",
   },
 ];
 
@@ -131,7 +137,10 @@ function createCard(record) {
         <p class="field-value due-date"></p>
       </div>
     </div>
-    <div class="sheet-name"></div>
+    <div class="card-foot">
+      <div class="sheet-name"></div>
+      <a class="sheet-link" target="_blank" rel="noopener noreferrer">元シートを開く</a>
+    </div>
   `;
 
   card.querySelector(".product-name").textContent = record.productName;
@@ -141,6 +150,7 @@ function createCard(record) {
   card.querySelector(".notes").textContent = notes;
   card.querySelector(".due-date").textContent = record.dueDate || "未設定";
   card.querySelector(".sheet-name").textContent = record.sheetName;
+  card.querySelector(".sheet-link").href = record.sheetUrl || sourceUrl;
   card.title = sourceUrl;
 
   return card;

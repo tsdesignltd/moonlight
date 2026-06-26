@@ -7,7 +7,8 @@
     "status": "実施中",
     "owner": "角南",
     "notes": "",
-    "dueDate": ""
+    "dueDate": "",
+    "sheetUrl": "https://docs.google.com/spreadsheets/d/1ghLnmliuFz-3z8QPrWs8aKnbukPHnHQhiDMKZkZpEK0/edit#gid=1627009869"
   },
   {
     "sheetName": "開発管理26002_羽釜ストーブ",
@@ -17,7 +18,8 @@
     "status": "未実施",
     "owner": "小峯",
     "notes": "ウッドストーブとしての性能のフィールドチェック",
-    "dueDate": ""
+    "dueDate": "",
+    "sheetUrl": "https://docs.google.com/spreadsheets/d/1ghLnmliuFz-3z8QPrWs8aKnbukPHnHQhiDMKZkZpEK0/edit#gid=291645431"
   },
   {
     "sheetName": "開発管理26003_スキーシュー",
@@ -27,6 +29,7 @@
     "status": "未実施",
     "owner": "小峯",
     "notes": "雪上でのテスト。まずは軽く安全な範囲で。",
-    "dueDate": ""
+    "dueDate": "",
+    "sheetUrl": "https://docs.google.com/spreadsheets/d/1ghLnmliuFz-3z8QPrWs8aKnbukPHnHQhiDMKZkZpEK0/edit#gid=759713071"
   }
 ]
