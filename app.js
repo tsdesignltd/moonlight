@@ -34,9 +34,9 @@ const embeddedRecords = [
     itemName: "T2試作製作",
     status: "実施中",
     owner: "角南",
-    notes: "",
+    notes: "高橋絞りにて試作中。完成時に工場訪問予定。",
     dueDate: "",
-    updatedDate: "2026/06/26",
+    updatedDate: "2026/07/02",
     sheetUrl:
       "https://docs.google.com/spreadsheets/d/1ghLnmliuFz-3z8QPrWs8aKnbukPHnHQhiDMKZkZpEK0/edit#gid=1627009869",
   },
@@ -49,7 +49,7 @@ const embeddedRecords = [
     owner: "小峯",
     notes: "ウッドストーブとしての性能のフィールドチェック",
     dueDate: "",
-    updatedDate: "2026/06/26",
+    updatedDate: "2026/07/02",
     sheetUrl:
       "https://docs.google.com/spreadsheets/d/1ghLnmliuFz-3z8QPrWs8aKnbukPHnHQhiDMKZkZpEK0/edit#gid=291645431",
   },
@@ -62,9 +62,35 @@ const embeddedRecords = [
     owner: "小峯",
     notes: "雪上でのテスト。まずは軽く安全な範囲で。",
     dueDate: "",
-    updatedDate: "2026/06/26",
+    updatedDate: "2026/07/02",
     sheetUrl:
       "https://docs.google.com/spreadsheets/d/1ghLnmliuFz-3z8QPrWs8aKnbukPHnHQhiDMKZkZpEK0/edit#gid=759713071",
+  },
+  {
+    sheetName: "開発管理26004_折畳箸",
+    productName: "折畳箸",
+    number: "",
+    itemName: "企画立案",
+    status: "実施中",
+    owner: "角南",
+    notes: "先端が木でできた折畳箸。口当たりにこだわりたい",
+    dueDate: "",
+    updatedDate: "2026/07/02",
+    sheetUrl:
+      "https://docs.google.com/spreadsheets/d/1ghLnmliuFz-3z8QPrWs8aKnbukPHnHQhiDMKZkZpEK0/edit#gid=1293373879",
+  },
+  {
+    sheetName: "開発管理26005_フック自在",
+    productName: "フック自在",
+    number: "",
+    itemName: "企画立案",
+    status: "実施中",
+    owner: "角南",
+    notes: "3Dプリント試作から成形品想定。",
+    dueDate: "",
+    updatedDate: "2026/07/02",
+    sheetUrl:
+      "https://docs.google.com/spreadsheets/d/1ghLnmliuFz-3z8QPrWs8aKnbukPHnHQhiDMKZkZpEK0/edit#gid=1114953107",
   },
 ];
 
@@ -189,8 +215,22 @@ async function fetchWorkbookRecords() {
   }
 }
 
-function fetchKnownSheetRecords() {
-  return Promise.all(knownSheetConfigs.map(fetchSheetRecord));
+async function fetchKnownSheetRecords() {
+  const results = await Promise.allSettled(knownSheetConfigs.map(fetchSheetRecord));
+  const records = results
+    .filter((result) => result.status === "fulfilled")
+    .map((result) => result.value)
+    .filter(Boolean);
+
+  for (const result of results) {
+    if (result.status === "rejected") console.warn(result.reason);
+  }
+
+  if (!records.length) {
+    throw new Error("No sheet records could be loaded");
+  }
+
+  return records;
 }
 
 async function fetchSheetRecord(config) {
